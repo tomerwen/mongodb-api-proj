@@ -6,14 +6,15 @@ import googleapiclient.errors
 import youtubesearch
 import requests
 import json
-import pymongo
+import credentials
+
 
 app= FastAPI()
 
 url = "https://eu-central-1.aws.data.mongodb-api.com/app/data-nbgea/endpoint/data/v1/action/findOne"
 payload = json.dumps({
-    "collection": "<COLLECTION_NAME>",
-    "database": "<DATABASE_NAME>",
+    "collection": "youtubeVideos",
+    "database": "listOfVideos",
     "dataSource": "Test-1",
     "projection": {
         "_id": 1
@@ -22,7 +23,7 @@ payload = json.dumps({
 headers = {
   'Content-Type': 'application/json',
   'Access-Control-Request-Headers': '*',
-  'api-key': '7DLhYp8LMkWTtGq0zPKIJjKP3c7Z8QMqdsNJSFH49ZJJLfD5KvAo01Qjz5meTz78',
+  'api-key': credentials.api_key,
 }
 
 @app.get("/")

@@ -3,16 +3,20 @@ import argparse
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import credentials
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 
-DEVELOPER_KEY = credentials.api_key
-YOUTUBE_API_SERVICE_NAME = 'youtube'
-YOUTUBE_API_VERSION = 'v3'
-def youtube_search(options):
-  youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-    developerKey=DEVELOPER_KEY)
 
-  # Call the search.list method to retrieve results matching the specified
-  # query term.
+apiPassword = credentials.password
+client = MongoClient("mongodb+srv://tomerwen:{apiPassword}@test-1.jazb2pv.mongodb.net/?retryWrites=true&w=majority")
+db = client["youtubeVideos"]
+collection = ["listOfVideos"]
+
+def youtube_search(options):  #start search with youtube api
+  youtube = build('youtube', 'v3',
+    developerKey=credentials.api_key)
+
+  # Call the search.list method to retrieve results matching the specified query term.
   search_response = youtube.search().list(
     q=options,
     maxResults=10,
@@ -33,6 +37,7 @@ def youtube_search(options):
         'channelTitle':search_result['snippet']['channelTitle'],
         'publishTime':search_result['snippet']['publishTime'] }]
       }
+      collection.__add__(video_details['videos'])
+      print(f"added {video_details['videos']} to {collection}")
       videos.append(video_details)
-  print(videos)
   return str(videos)
