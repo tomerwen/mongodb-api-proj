@@ -25,5 +25,14 @@ def youtube_search(options):
     if search_result['id']['kind'] == 'youtube#video':
       videos.append('%s (%s)' % (search_result['snippet']['title'],
                                  search_result['id']['videoId']))
-  print(search_result)
+      video_details = { 'videos': [ {
+        'id':search_result['id']['videoId'],
+        'channedId':search_result['snippet']['channelId'],
+        'title':search_result['snippet']['title'],
+        'description':search_result['snippet']['description'],
+        'channelTitle':search_result['snippet']['channelTitle'],
+        'publishTime':search_result['snippet']['publishTime'] }]
+      }
+      videos.append(video_details)
+  print(videos)
   return str(videos)
