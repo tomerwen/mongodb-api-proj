@@ -8,9 +8,9 @@ from pymongo.server_api import ServerApi
 
 
 apiPassword = credentials.password
-client = MongoClient("mongodb+srv://tomerwen:{apiPassword}@test-1.jazb2pv.mongodb.net/?retryWrites=true&w=majority")
+client = MongoClient(f"mongodb+srv://tomerwen:{apiPassword}@test-1.jazb2pv.mongodb.net/?retryWrites=true&w=majority")
 db = client["youtubeVideos"]
-collection = ["listOfVideos"]
+collection = db["listOfVideos"]
 
 def youtube_search(options):  #start search with youtube api
   youtube = build('youtube', 'v3',
@@ -29,15 +29,16 @@ def youtube_search(options):  #start search with youtube api
     if search_result['id']['kind'] == 'youtube#video':
       videos.append('%s (%s)' % (search_result['snippet']['title'],
                                  search_result['id']['videoId']))
-      video_details = { 'videos': [ {
+      video_details = {
         'id':search_result['id']['videoId'],
         'channedId':search_result['snippet']['channelId'],
         'title':search_result['snippet']['title'],
         'description':search_result['snippet']['description'],
         'channelTitle':search_result['snippet']['channelTitle'],
-        'publishTime':search_result['snippet']['publishTime'] }]
+        'publishTime':search_result['snippet']['publishTime'] 
       }
-      collection.__add__(video_details['videos'])
-      print(f"added {video_details['videos']} to {collection}")
-      videos.append(video_details)
+    if video_details['id'] not in [doc['id'] for doc in collection.find()]:
+        collection.insert_one(video_details)
+        print(f"added {video_details} to {collection}")
+    videos.append(video_details)
   return str(videos)
