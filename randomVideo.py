@@ -7,11 +7,10 @@ client = MongoClient(f"mongodb+srv://tomerwen:{apiPassword}@test-1.jazb2pv.mongo
 db = client["youtubeVideos"]
 collection = db["listOfVideos"]
 
-def findRandomVideo():
+def findRandomVideo(): #will return id,channelId,title,description,channelTitle,publishTime
     pipeline = [{"$sample": {"size": 1}}]
     result = collection.aggregate(pipeline)
     random_video = next(result, None)
-    print(random_video['id'])
     return random_video
 
 findRandomVideo()

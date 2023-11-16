@@ -37,8 +37,9 @@ def youtube_search(options):  #start search with youtube api
         'channelTitle':search_result['snippet']['channelTitle'],
         'publishTime':search_result['snippet']['publishTime'] 
       }
-    if video_details['id'] not in [doc['id'] for doc in collection.find()]:
-        collection.insert_one(video_details)
-        print(f"added {video_details} to {collection}")
-    videos.append(video_details)
+      print(search_result)
+      if video_details['id'] not in [doc['id'] for doc in collection.find()]:
+          collection.insert_one(video_details)
+          print(f"added {video_details} to {collection}")
+      videos.append(video_details)
   return str(videos)

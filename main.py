@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 import os
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -8,8 +8,12 @@ import requests
 import json
 import credentials
 import randomVideo
+from fastapi.templating import Jinja2Templates
+from html import unescape
 
-app= FastAPI()
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 url = "https://eu-central-1.aws.data.mongodb-api.com/app/data-nbgea/endpoint/data/v1/action/findOne"
 payload = json.dumps({
@@ -37,22 +41,9 @@ async def search(search_tag: str):
 
 
 @app.get("/random")
-async def random():
-    Video = randomVideo.findRandomVideo()
-    videoTitle = Video['title']
-    videoURL= f"https://www.youtube.com/watch?v={Video['id']}"
-    embeded_video = """
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ videoTitle }} - Embedded Video</title>
-</head>
-<body>
-    <h1>{{ videoTitle }}</h1>
-    <iframe width="560" height="315" src="{{ videoURL }}" frameborder="0" allowfullscreen></iframe>
-</body>
-</html>
-    """
-    return embeded_video
+async def random(request: Request):
+    Video = randomVideo.findRandomVideo() #gets id,channelId,title,description,channelTitle,publishTime
+    videoTitle = unescape(Video['title'])
+    VideoID = "test"
+    videoURL= f"https://www.youtube.com/embed/{VideoID}"
+    return templates.TemplateResponse(f"embedVideo.html", {"request": request, "videoTitle": videoTitle, "videoURL": 'https://www.youtube.com/watch?v=nscKKYbZpsE&ab_channel=AddictedtoAmericanDad'})
