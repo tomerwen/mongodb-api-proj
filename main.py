@@ -1,10 +1,5 @@
 from fastapi import FastAPI, Request
-import os
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
-import googleapiclient.errors
 import youtubesearch
-import requests
 import json
 import credentials
 import randomVideo
