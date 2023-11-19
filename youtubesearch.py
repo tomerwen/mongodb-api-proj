@@ -7,7 +7,7 @@ from pymongo.server_api import ServerApi
 
 
 apiPassword = credentials.password
-client = MongoClient(f"mongodb+srv://tomerwen:{apiPassword}@test-1.jazb2pv.mongodb.net/?retryWrites=true&w=majority")
+client = MongoClient("mongodb://mongo-service:27017/")
 db = client["youtubeVideos"]
 collection = db["listOfVideos"]
 
